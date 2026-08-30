@@ -45,7 +45,7 @@ export const BlockPlanner: React.FC = () => {
   };
 
   return (
-    <div className="p-6 pb-32 space-y-6 max-w-7xl mx-auto">
+    <div className="p-6 pb-40 space-y-6 max-w-7xl mx-auto">
       {/* Header & Primary Optimization Action Banner */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-card p-5 flex flex-wrap items-center justify-between gap-4">
         <div>

@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import {
   Train as TrainIcon,
-  AlertTriangle,
-  Clock,
   Info,
-  ShieldAlert,
-  CheckCircle2,
-  ShieldCheck,
 } from 'lucide-react';
 import { useRailFlowStore } from '../../store/railflowStore';
 import { CandidateWindow, Train } from '../../types';
@@ -25,9 +20,25 @@ export const TrainImpactGantt: React.FC<TrainImpactGanttProps> = ({
 
   const activeSection = sections.find((s) => s.id === selectedSectionId) || sections[3];
   const vaigaiTrain = trains.find((t) => t.number === '12635') || trains[0];
+  const pallavanTrain = trains.find((t) => t.number === '12606') || trains[2];
+  const passengerTrain = trains.find((t) => t.number === '56706') || trains[4];
+  const freightTrain = trains.find((t) => t.number === 'G-SR-742') || trains[5];
 
   // Time slots from 08:00 to 19:00 (11 hours total = 660 minutes)
-  const hours = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
+  const hours = [
+    '08:00',
+    '09:00',
+    '10:00',
+    '11:00',
+    '12:00',
+    '13:00',
+    '14:00',
+    '15:00',
+    '16:00',
+    '17:00',
+    '18:00',
+    '19:00',
+  ];
 
   const timeToPercent = (timeStr: string) => {
     const [h, m] = timeStr.split(':').map(Number);
@@ -38,9 +49,133 @@ export const TrainImpactGantt: React.FC<TrainImpactGanttProps> = ({
 
   const blockStartPercent = timeToPercent(selectedCandidate.startTime);
   const blockEndPercent = timeToPercent(selectedCandidate.endTime);
-  const blockWidthPercent = blockEndPercent - blockStartPercent;
+  const blockWidthPercent = Math.max(2, blockEndPercent - blockStartPercent);
 
-  const isVaigaiConflict = selectedCandidate.id === 'OPTION_C';
+  // Train row configurations with dedicated parameters and candidate-dependent status badges
+  const trainRows = [
+    {
+      number: '12635',
+      title: '12635 Vaigai Superfast Express',
+      subtitle: 'Chennai 13:15 → Madurai 20:35',
+      startTime: '13:15',
+      endTime: '16:14',
+      startStationLabel: 'MS 13:15',
+      endStationLabel: 'VRI 16:14',
+      indicatorColor: 'bg-[#0FAF9A] animate-pulse',
+      titleColor: 'text-[#123B5D]',
+      barClasses: 'bg-gradient-to-r from-[#123B5D] to-[#2C5F7C] border border-white/90',
+      trainObj: vaigaiTrain,
+      renderStatusBadge: () => {
+        if (selectedCandidate.id === 'OPTION_C') {
+          return (
+            <span className="inline-flex items-center text-[10px] bg-rose-600 text-white font-extrabold px-2.5 py-1 rounded-md shadow animate-pulse truncate max-w-[260px]">
+              ❌ DIRECT VAIGAI CONFLICT (+15m)
+            </span>
+          );
+        }
+        if (selectedCandidate.id === 'OPTION_A') {
+          return (
+            <span className="inline-flex items-center text-[10px] bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold px-2.5 py-1 rounded-md truncate max-w-[260px]">
+              ✓ 100% Protected (Departs MS after block)
+            </span>
+          );
+        }
+        return (
+          <span className="inline-flex items-center text-[10px] bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold px-2.5 py-1 rounded-md truncate max-w-[260px]">
+            ✓ 100% Protected (Line Clear at 15:30)
+          </span>
+        );
+      },
+    },
+    {
+      number: '12606',
+      title: '12606 Pallavan Superfast Express (Up)',
+      subtitle: 'Karaikkudi → Chennai Egmore (VM 09:25)',
+      startTime: '08:20',
+      endTime: '09:25',
+      startStationLabel: '08:20',
+      endStationLabel: '09:25',
+      indicatorColor: 'bg-rose-600',
+      titleColor: 'text-rose-700',
+      barClasses: 'bg-rose-600 border border-rose-400',
+      trainObj: pallavanTrain,
+      renderStatusBadge: () => {
+        if (selectedCandidate.id === 'OPTION_A') {
+          return (
+            <span className="inline-flex items-center text-[10px] bg-rose-600 text-white font-extrabold px-2.5 py-1 rounded-md shadow animate-pulse truncate max-w-[260px]">
+              ❌ Pallavan Conflict (+28m)
+            </span>
+          );
+        }
+        return (
+          <span className="inline-flex items-center text-[10px] text-slate-600 bg-slate-100 border border-slate-200 font-semibold px-2.5 py-1 rounded-md truncate max-w-[260px]">
+            ✓ Clear of Midday Window
+          </span>
+        );
+      },
+    },
+    {
+      number: '56706',
+      title: '56706 Villupuram–Madurai Passenger',
+      subtitle: 'VM Dep 11:45 IST',
+      startTime: '11:45',
+      endTime: '12:40',
+      startStationLabel: '11:45',
+      endStationLabel: '12:40',
+      indicatorColor: 'bg-slate-700',
+      titleColor: 'text-slate-800',
+      barClasses: 'bg-slate-700 border border-slate-500',
+      trainObj: passengerTrain,
+      renderStatusBadge: () => {
+        if (selectedCandidate.id === 'OPTION_B') {
+          return (
+            <span className="inline-flex items-center text-[10px] bg-teal-100 text-teal-900 border border-teal-300 font-bold px-2.5 py-1 rounded-md truncate max-w-[260px]">
+              ⏱️ Regulated +6m (Controlled Spacing)
+            </span>
+          );
+        }
+        if (selectedCandidate.id === 'OPTION_A') {
+          return (
+            <span className="inline-flex items-center text-[10px] bg-amber-100 text-amber-900 border border-amber-300 font-bold px-2.5 py-1 rounded-md truncate max-w-[260px]">
+              ⏱️ Regulated +14m (Morning Reschedule)
+            </span>
+          );
+        }
+        return (
+          <span className="inline-flex items-center text-[10px] text-slate-600 bg-slate-100 border border-slate-200 font-semibold px-2.5 py-1 rounded-md truncate max-w-[260px]">
+            ✓ Normal Timetable Path
+          </span>
+        );
+      },
+    },
+    {
+      number: 'G-SR-742',
+      title: 'G-SR-742 Neyveli Coal Freight Rake',
+      subtitle: 'VM 12:50 IST',
+      startTime: '12:50',
+      endTime: '13:45',
+      startStationLabel: '12:50',
+      endStationLabel: '13:45',
+      indicatorColor: 'bg-slate-500',
+      titleColor: 'text-slate-700',
+      barClasses: 'bg-slate-600 border border-dashed border-white/90',
+      trainObj: freightTrain,
+      renderStatusBadge: () => {
+        if (selectedCandidate.id === 'OPTION_B') {
+          return (
+            <span className="inline-flex items-center text-[10px] bg-slate-100 text-slate-800 border border-slate-300 font-bold px-2.5 py-1 rounded-md truncate max-w-[260px]">
+              📦 Siding Loop Track 3 Halt (+8m)
+            </span>
+          );
+        }
+        return (
+          <span className="inline-flex items-center text-[10px] text-slate-600 bg-slate-100 border border-slate-200 font-semibold px-2.5 py-1 rounded-md truncate max-w-[260px]">
+            ✓ Normal Path
+          </span>
+        );
+      },
+    },
+  ];
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-card p-5 space-y-5">
@@ -81,208 +216,112 @@ export const TrainImpactGantt: React.FC<TrainImpactGanttProps> = ({
         </div>
       </div>
 
-      {/* Gantt & String Chart Visualizer */}
+      {/* Gantt & String Chart Visualizer with Responsive Scroll */}
       <div className="relative border border-slate-200 rounded-xl bg-slate-50/50 p-4 overflow-x-auto">
-        {/* Time axis header */}
-        <div className="relative w-full h-8 border-b border-slate-200 flex justify-between text-xs font-mono font-bold text-slate-600 px-1 select-none">
-          {hours.map((h, i) => (
-            <div key={i} className="text-center">
-              {h}
-            </div>
-          ))}
-        </div>
-
-        {/* Chart Rows Container with comfortable natural height */}
-        <div className="relative w-full min-h-[300px] mt-3 pb-3">
-          {/* Vertical grid lines */}
-          <div className="absolute inset-0 flex justify-between pointer-events-none">
-            {hours.map((_, i) => (
-              <div key={i} className="h-full border-r border-slate-200/80" />
+        <div className="min-w-[1000px] relative">
+          {/* Layer 1: Time axis header */}
+          <div className="relative w-full h-8 border-b border-slate-200 flex justify-between text-xs font-mono font-bold text-slate-600 px-1 select-none mb-5">
+            {hours.map((h, i) => (
+              <div key={i} className="text-center w-12 -ml-6 first:ml-0 last:mr-0">
+                {h}
+              </div>
             ))}
           </div>
 
-          {/* Active Maintenance Block Window Shading */}
-          <div
-            className="absolute top-0 bottom-0 bg-teal-500/15 border-2 border-dashed border-teal-600 rounded-lg transition-all duration-300 pointer-events-none z-0"
-            style={{
-              left: `${blockStartPercent}%`,
-              width: `${blockWidthPercent}%`,
-            }}
-          >
-            {/* Top Badge for Block Window (Placed at the very top of shaded area so it never overlaps train tracks) */}
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0C2340] text-white px-2.5 py-0.5 rounded-full text-[10px] font-extrabold shadow-md border border-[#0FAF9A] whitespace-nowrap">
-              ⚡ {selectedCandidate.name.split(':')[0]} ({selectedCandidate.startTime}–{selectedCandidate.endTime})
+          {/* Main Timeline Body */}
+          <div className="relative w-full">
+            {/* LAYER 1: Full-height Vertical Grid Lines */}
+            <div className="absolute inset-0 pointer-events-none z-1 flex justify-between">
+              {hours.map((_, i) => (
+                <div key={i} className="h-full border-r border-slate-200/90" />
+              ))}
             </div>
-          </div>
 
-          {/* Train Trajectory Rows with generous vertical separation */}
-          <div className="space-y-6 pt-5 relative z-10">
-            {/* 1. 🚆 12635 VAIGAI SF EXP (HERO SPOTLIGHT TRAIN) */}
+            {/* LAYER 2: Block-Window Highlight Shading Layer */}
             <div
-              className="relative flex flex-col space-y-1 group cursor-pointer"
-              onMouseEnter={() => setHoveredTrain('12635')}
-              onMouseLeave={() => setHoveredTrain(null)}
-              onClick={() => setSelectedTrain(vaigaiTrain)}
+              className="absolute top-0 bottom-0 bg-teal-500/15 border-2 border-dashed border-teal-600/80 rounded-xl transition-all duration-300 pointer-events-none z-5"
+              style={{
+                left: `${blockStartPercent}%`,
+                width: `${blockWidthPercent}%`,
+              }}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#0FAF9A] animate-pulse" />
-                  <span className="text-xs font-extrabold text-[#123B5D]">
-                    🚆 12635 Vaigai Superfast Express
-                  </span>
-                  <span className="text-[10px] bg-slate-200 text-slate-700 font-mono px-1.5 rounded font-bold">
-                    Chennai 13:15 → Madurai 20:35
-                  </span>
-                </div>
-
-                {isVaigaiConflict ? (
-                  <span className="text-[10px] bg-rose-600 text-white font-extrabold px-2 py-0.5 rounded shadow animate-pulse">
-                    ❌ DIRECT VAIGAI CONFLICT (+15m)
-                  </span>
-                ) : (
-                  <span className="text-[10px] bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold px-2 py-0.5 rounded">
-                    ✓ 100% Protected (Line Clear at 15:30)
-                  </span>
-                )}
-              </div>
-
-              <div className="relative w-full h-4 bg-slate-200/80 rounded-full">
-                <div
-                  className="absolute h-4 top-0 rounded-full bg-gradient-to-r from-[#123B5D] to-[#2C5F7C] border border-white shadow-md flex items-center justify-between px-2 text-white"
-                  style={{
-                    left: `${timeToPercent('13:15')}%`,
-                    width: `${Math.max(12, timeToPercent('16:16') - timeToPercent('13:15'))}%`,
-                  }}
-                >
-                  <span className="text-[9px] font-bold font-mono">MS 13:15</span>
-                  <TrainIcon className="w-3 h-3 text-white" />
-                  <span className="text-[9px] font-bold font-mono">VRI 16:14</span>
-                </div>
+              {/* Top Pill for Block Window positioned in the header clearance zone */}
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#0C2340] text-white px-3 py-0.5 rounded-full text-[10px] font-extrabold shadow-md border border-[#0FAF9A] whitespace-nowrap z-10 flex items-center space-x-1.5">
+                <span>⚡</span>
+                <span>
+                  {selectedCandidate.name.split(':')[0]} ({selectedCandidate.startTime}–{selectedCandidate.endTime})
+                </span>
               </div>
             </div>
 
-            {/* 2. 12606 Pallavan Superfast Express */}
-            <div
-              className="relative flex flex-col space-y-1 group cursor-pointer"
-              onMouseEnter={() => setHoveredTrain('12606')}
-              onMouseLeave={() => setHoveredTrain(null)}
-              onClick={() => setSelectedTrain(trains[2])}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <span className="w-2 h-2 rounded-full bg-rose-600" />
-                  <span className="text-xs font-bold text-rose-700">
-                    12606 Pallavan Superfast Express (Up)
-                  </span>
-                  <span className="text-[10px] bg-slate-200 text-slate-700 font-mono px-1.5 rounded">
-                    Karaikkudi → Chennai Egmore (VM 09:25)
-                  </span>
-                </div>
+            {/* Track Lanes: 4 Independent Dedicated Rows */}
+            <div className="relative z-10 space-y-4 pt-4 pb-2">
+              {trainRows.map((trainData) => {
+                const isHovered = hoveredTrain === trainData.number;
+                const startPercent = timeToPercent(trainData.startTime);
+                const endPercent = timeToPercent(trainData.endTime);
+                const widthPercent = Math.max(10, endPercent - startPercent);
 
-                {selectedCandidate.id === 'OPTION_A' ? (
-                  <span className="text-[10px] bg-rose-600 text-white font-extrabold px-2 py-0.5 rounded shadow">
-                    ❌ Pallavan Conflict (+28m)
-                  </span>
-                ) : (
-                  <span className="text-[10px] text-slate-500 font-semibold">
-                    ✓ Clear of Midday Window
-                  </span>
-                )}
-              </div>
+                return (
+                  <div
+                    key={trainData.number}
+                    className={`relative rounded-xl border p-3.5 transition-all duration-200 group cursor-pointer flex flex-col justify-between ${
+                      isHovered
+                        ? 'border-railway-blue/60 bg-blue-50/40 shadow-md ring-1 ring-railway-blue/20'
+                        : 'border-slate-200 bg-white/95 shadow-xs hover:border-slate-300 hover:bg-white'
+                    }`}
+                    style={{ minHeight: '82px' }}
+                    onMouseEnter={() => setHoveredTrain(trainData.number)}
+                    onMouseLeave={() => setHoveredTrain(null)}
+                    onClick={() => setSelectedTrain(trainData.trainObj)}
+                  >
+                    {/* LAYER 4: Dedicated Row Header (Train Info Left + Status Badge Right) */}
+                    <div className="relative z-20 flex items-center justify-between gap-3 min-w-0">
+                      {/* Left Info: Train identity */}
+                      <div className="flex items-center space-x-2 min-w-0 truncate">
+                        <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${trainData.indicatorColor}`} />
+                        <span className={`text-xs font-extrabold truncate ${trainData.titleColor}`}>
+                          {trainData.title}
+                        </span>
+                        <span className="text-[10px] bg-slate-100 text-slate-700 font-mono px-2 py-0.5 rounded font-bold border border-slate-200 shrink-0">
+                          {trainData.subtitle}
+                        </span>
+                      </div>
 
-              <div className="relative w-full h-3.5 bg-slate-200/80 rounded-full">
-                <div
-                  className="absolute h-3.5 top-0 rounded-full bg-rose-600 shadow-sm flex items-center justify-between px-1.5 text-white"
-                  style={{
-                    left: `${timeToPercent('08:20')}%`,
-                    width: `${Math.max(10, timeToPercent('09:25') - timeToPercent('08:20'))}%`,
-                  }}
-                >
-                  <span className="text-[8px] font-bold">08:20</span>
-                  <TrainIcon className="w-2.5 h-2.5 text-white" />
-                  <span className="text-[8px] font-bold">09:25</span>
-                </div>
-              </div>
-            </div>
+                      {/* Right Info: Status badge strictly constrained within its row */}
+                      <div className="shrink-0 flex items-center">
+                        {trainData.renderStatusBadge()}
+                      </div>
+                    </div>
 
-            {/* 3. 56706 Villupuram-Madurai Passenger */}
-            <div
-              className="relative flex flex-col space-y-1 group cursor-pointer"
-              onMouseEnter={() => setHoveredTrain('56706')}
-              onMouseLeave={() => setHoveredTrain(null)}
-              onClick={() => setSelectedTrain(trains[4])}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <span className="w-2 h-2 rounded-full bg-slate-700" />
-                  <span className="text-xs font-bold text-slate-800">
-                    56706 Villupuram–Madurai Passenger
-                  </span>
-                  <span className="text-[10px] bg-slate-200 text-slate-700 font-mono px-1.5 rounded">
-                    VM Dep 11:45 IST
-                  </span>
-                </div>
+                    {/* LAYER 3: Dedicated Track Rail Guide + Absolute Train Movement Bar */}
+                    <div className="relative w-full h-8 flex items-center mt-1 z-15">
+                      {/* Horizontal track rail guide bar */}
+                      <div className="absolute inset-x-0 h-2 bg-slate-200/80 rounded-full border border-slate-300/40" />
 
-                {selectedCandidate.id === 'OPTION_B' && (
-                  <span className="text-[10px] bg-teal-100 text-teal-900 border border-teal-300 font-bold px-2 py-0.5 rounded">
-                    ⏱️ Regulated +6m (Controlled Spacing)
-                  </span>
-                )}
-              </div>
-
-              <div className="relative w-full h-3.5 bg-slate-200/80 rounded-full">
-                <div
-                  className="absolute h-3.5 top-0 rounded-full bg-slate-700 shadow-sm flex items-center justify-between px-1.5 text-white"
-                  style={{
-                    left: `${timeToPercent('11:45')}%`,
-                    width: `${Math.max(10, timeToPercent('12:40') - timeToPercent('11:45'))}%`,
-                  }}
-                >
-                  <span className="text-[8px] font-bold">11:45</span>
-                  <TrainIcon className="w-2.5 h-2.5 text-white" />
-                  <span className="text-[8px] font-bold">12:40</span>
-                </div>
-              </div>
-            </div>
-
-            {/* 4. G-SR-742 Neyveli Lignite Freight Rake */}
-            <div
-              className="relative flex flex-col space-y-1 group cursor-pointer"
-              onMouseEnter={() => setHoveredTrain('G-SR-742')}
-              onMouseLeave={() => setHoveredTrain(null)}
-              onClick={() => setSelectedTrain(trains[5])}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <span className="w-2 h-2 rounded-full bg-slate-500" />
-                  <span className="text-xs font-bold text-slate-700">
-                    G-SR-742 Neyveli Coal Freight Rake
-                  </span>
-                  <span className="text-[10px] bg-slate-200 text-slate-700 font-mono px-1.5 rounded">
-                    VM 12:50 IST
-                  </span>
-                </div>
-
-                {selectedCandidate.id === 'OPTION_B' && (
-                  <span className="text-[10px] bg-slate-100 text-slate-800 border border-slate-300 font-bold px-2 py-0.5 rounded">
-                    📦 Siding Loop Track 3 Halt (+8m)
-                  </span>
-                )}
-              </div>
-
-              <div className="relative w-full h-3.5 bg-slate-200/80 rounded-full">
-                <div
-                  className="absolute h-3.5 top-0 rounded-full bg-slate-600 shadow-sm border border-dashed border-white flex items-center justify-between px-1.5 text-white"
-                  style={{
-                    left: `${timeToPercent('12:50')}%`,
-                    width: `${Math.max(10, timeToPercent('13:45') - timeToPercent('12:50'))}%`,
-                  }}
-                >
-                  <span className="text-[8px] font-bold">12:50</span>
-                  <TrainIcon className="w-2.5 h-2.5 text-white" />
-                  <span className="text-[8px] font-bold">13:45</span>
-                </div>
-              </div>
+                      {/* Absolute Train Movement Bar */}
+                      <div
+                        className={`absolute h-7 rounded-lg shadow-sm flex items-center justify-between px-2.5 text-white z-15 transition-transform duration-150 ${
+                          isHovered ? 'scale-y-105 shadow-md ring-2 ring-white/50' : ''
+                        } ${trainData.barClasses}`}
+                        style={{
+                          left: `${startPercent}%`,
+                          width: `${widthPercent}%`,
+                          minWidth: '72px',
+                        }}
+                      >
+                        <span className="text-[9px] font-bold font-mono whitespace-nowrap">
+                          {trainData.startStationLabel}
+                        </span>
+                        <TrainIcon className="w-3.5 h-3.5 mx-1 shrink-0 text-white/90" />
+                        <span className="text-[9px] font-bold font-mono whitespace-nowrap">
+                          {trainData.endStationLabel}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -324,3 +363,4 @@ export const TrainImpactGantt: React.FC<TrainImpactGanttProps> = ({
     </div>
   );
 };
+
