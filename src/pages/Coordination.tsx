@@ -128,7 +128,6 @@ export const Coordination: React.FC = () => {
           <div className="p-5 rounded-xl border-2 border-teal-500 bg-teal-50/40 space-y-4 shadow-sm relative">
             <div className="flex items-center justify-between border-b border-teal-200 pb-2">
               <div className="flex items-center space-x-1.5">
-                <Sparkles className="w-4 h-4 text-teal-600" />
                 <span className="text-xs font-extrabold text-teal-950 uppercase tracking-wider">
                   RailFlow Coordinated Solution
                 </span>
@@ -148,8 +147,8 @@ export const Coordination: React.FC = () => {
                   </span>
                 </div>
 
-                <div className="h-10 bg-gradient-to-r from-blue-600 via-amber-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-extrabold text-xs shadow-md tracking-wide">
-                  ⚡ ONE SINGLE MULTI-DEPARTMENT BLOCK ⚡
+                <div className="h-10 bg-[#123B5D] hover:bg-[#0F324F] rounded-lg flex items-center justify-center text-white font-semibold text-xs shadow-sm border border-[#0D304D] tracking-wide">
+                  ONE SINGLE MULTI-DEPARTMENT BLOCK
                 </div>
 
                 <div className="grid grid-cols-3 gap-1 text-[10px] text-center font-semibold pt-1">
