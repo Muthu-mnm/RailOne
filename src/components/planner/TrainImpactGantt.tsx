@@ -76,13 +76,13 @@ export const TrainImpactGantt: React.FC<TrainImpactGanttProps> = ({
         if (selectedCandidate.id === 'OPTION_A') {
           return (
             <span className="inline-flex items-center text-[10px] bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold px-2.5 py-1 rounded-md truncate max-w-[260px]">
-              ✓ 100% Protected (Departs MS after block)
+              100% Protected (Departs MS after block)
             </span>
           );
         }
         return (
           <span className="inline-flex items-center text-[10px] bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold px-2.5 py-1 rounded-md truncate max-w-[260px]">
-            ✓ 100% Protected (Line Clear at 15:30)
+            100% Protected (Line Clear at 15:30)
           </span>
         );
       },
@@ -109,7 +109,7 @@ export const TrainImpactGantt: React.FC<TrainImpactGanttProps> = ({
         }
         return (
           <span className="inline-flex items-center text-[10px] text-slate-600 bg-slate-100 border border-slate-200 font-semibold px-2.5 py-1 rounded-md truncate max-w-[260px]">
-            ✓ Clear of Midday Window
+            Clear of Midday Window
           </span>
         );
       },
@@ -130,14 +130,14 @@ export const TrainImpactGantt: React.FC<TrainImpactGanttProps> = ({
         if (selectedCandidate.id === 'OPTION_B') {
           return (
             <span className="inline-flex items-center text-[10px] bg-teal-100 text-teal-900 border border-teal-300 font-bold px-2.5 py-1 rounded-md truncate max-w-[260px]">
-              ⏱️ Regulated +6m (Controlled Spacing)
+              Regulated +6m (Controlled Spacing)
             </span>
           );
         }
         if (selectedCandidate.id === 'OPTION_A') {
           return (
             <span className="inline-flex items-center text-[10px] bg-amber-100 text-amber-900 border border-amber-300 font-bold px-2.5 py-1 rounded-md truncate max-w-[260px]">
-              ⏱️ Regulated +14m (Morning Reschedule)
+              Regulated +14m (Morning Reschedule)
             </span>
           );
         }
@@ -164,13 +164,13 @@ export const TrainImpactGantt: React.FC<TrainImpactGanttProps> = ({
         if (selectedCandidate.id === 'OPTION_B') {
           return (
             <span className="inline-flex items-center text-[10px] bg-slate-100 text-slate-800 border border-slate-300 font-bold px-2.5 py-1 rounded-md truncate max-w-[260px]">
-              📦 Siding Loop Track 3 Halt (+8m)
+              Siding Loop Track 3 Halt (+8m)
             </span>
           );
         }
         return (
           <span className="inline-flex items-center text-[10px] text-slate-600 bg-slate-100 border border-slate-200 font-semibold px-2.5 py-1 rounded-md truncate max-w-[260px]">
-            ✓ Normal Path
+            Normal Path
           </span>
         );
       },
@@ -237,16 +237,16 @@ export const TrainImpactGantt: React.FC<TrainImpactGanttProps> = ({
               ))}
             </div>
 
-            {/* LAYER 2: Block-Window Highlight Shading Layer */}
+            {/* Block-Window Highlight & Boundary Overlay (Brought to front with pointer-events-none) */}
             <div
-              className="absolute top-0 bottom-0 bg-teal-500/15 border-2 border-dashed border-teal-600/80 rounded-xl transition-all duration-300 pointer-events-none z-5"
+              className="absolute top-0 bottom-0 bg-teal-500/12 border-2 border-dashed border-teal-600 rounded-xl transition-all duration-300 pointer-events-none z-30 shadow-[0_0_15px_rgba(15,175,154,0.15)]"
               style={{
                 left: `${blockStartPercent}%`,
                 width: `${blockWidthPercent}%`,
               }}
             >
               {/* Top Pill for Block Window positioned in the header clearance zone */}
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#0C2340] text-white px-3 py-0.5 rounded-full text-[10px] font-extrabold shadow-md border border-[#0FAF9A] whitespace-nowrap z-10 flex items-center space-x-1.5">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#0C2340] text-white px-3 py-0.5 rounded-full text-[10px] font-extrabold shadow-md border border-[#0FAF9A] whitespace-nowrap z-40 flex items-center space-x-1.5">
                 <span>⚡</span>
                 <span>
                   {selectedCandidate.name.split(':')[0]} ({selectedCandidate.startTime}–{selectedCandidate.endTime})
@@ -270,34 +270,44 @@ export const TrainImpactGantt: React.FC<TrainImpactGanttProps> = ({
                         ? 'border-railway-blue/60 bg-blue-50/40 shadow-md ring-1 ring-railway-blue/20'
                         : 'border-slate-200 bg-white/95 shadow-xs hover:border-slate-300 hover:bg-white'
                     }`}
-                    style={{ minHeight: '82px' }}
+                    style={{ minHeight: '92px' }}
                     onMouseEnter={() => setHoveredTrain(trainData.number)}
                     onMouseLeave={() => setHoveredTrain(null)}
                     onClick={() => setSelectedTrain(trainData.trainObj)}
                   >
                     {/* LAYER 4: Dedicated Row Header (Train Info Left + Status Badge Right) */}
-                    <div className="relative z-20 flex items-center justify-between gap-3 min-w-0">
-                      {/* Left Info: Train identity */}
-                      <div className="flex items-center space-x-2 min-w-0 truncate">
-                        <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${trainData.indicatorColor}`} />
-                        <span className={`text-xs font-extrabold truncate ${trainData.titleColor}`}>
-                          {trainData.title}
-                        </span>
-                        <span className="text-[10px] bg-slate-100 text-slate-700 font-mono px-2 py-0.5 rounded font-bold border border-slate-200 shrink-0">
-                          {trainData.subtitle}
-                        </span>
+                    <div className="relative z-20 flex items-start justify-between gap-3 min-w-0">
+                      {/* Left Info: Train identity (Title and Subtitle stacked one below the other) */}
+                      <div className="flex items-start space-x-2.5 min-w-0">
+                        <span className={`w-2.5 h-2.5 rounded-full shrink-0 mt-1 ${trainData.indicatorColor}`} />
+                        <div className="flex flex-col min-w-0">
+                          <span className={`text-xs font-extrabold truncate ${trainData.titleColor}`}>
+                            {trainData.title}
+                          </span>
+                          <span className="text-[10px] text-slate-500 font-mono font-semibold truncate mt-0.5">
+                            {trainData.subtitle}
+                          </span>
+                        </div>
                       </div>
 
                       {/* Right Info: Status badge strictly constrained within its row */}
-                      <div className="shrink-0 flex items-center">
+                      <div className="shrink-0 flex items-center pt-0.5">
                         {trainData.renderStatusBadge()}
                       </div>
                     </div>
 
                     {/* LAYER 3: Dedicated Track Rail Guide + Absolute Train Movement Bar */}
                     <div className="relative w-full h-8 flex items-center mt-1 z-15">
-                      {/* Horizontal track rail guide bar */}
-                      <div className="absolute inset-x-0 h-2 bg-slate-200/80 rounded-full border border-slate-300/40" />
+                      {/* Horizontal Railway Track Bed with Vertical Sleepers (Ties) & Steel Rails */}
+                      <div
+                        className="absolute inset-x-0 h-3.5 rounded-sm border-y border-slate-400/80 bg-slate-100/80 shadow-inner"
+                        style={{
+                          backgroundImage:
+                            'repeating-linear-gradient(90deg, #94a3b8 0px, #94a3b8 2px, transparent 2px, transparent 12px)',
+                        }}
+                      >
+                        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-slate-300/60 pointer-events-none" />
+                      </div>
 
                       {/* Absolute Train Movement Bar */}
                       <div

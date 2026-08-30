@@ -154,7 +154,7 @@ export const TopNavbar: React.FC = () => {
               : 'bg-gradient-to-r from-railway-blue to-railway-steel hover:from-railway-dark hover:to-railway-blue text-white border-railway-blue'
           }`}
         >
-          <Sparkles className="w-3.5 h-3.5 text-railway-teal" />
+          
           <span>{isDemoMode ? 'Demo In Progress' : 'Demo'}</span>
           <Play className="w-3 h-3 fill-current ml-0.5" />
         </button>

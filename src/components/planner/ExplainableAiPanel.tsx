@@ -28,9 +28,6 @@ export const ExplainableAiPanel: React.FC<ExplainableAiPanelProps> = ({ candidat
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
         <div className="flex items-center space-x-2.5">
-          <div className="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
-            <Sparkles className="w-4 h-4" />
-          </div>
           <div>
             <div className="flex items-center space-x-2">
               <span className="font-extrabold text-sm text-slate-900">

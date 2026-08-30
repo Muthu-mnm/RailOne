@@ -207,7 +207,6 @@ export const Operations: React.FC = () => {
             <div className="bg-teal-50/70 border border-teal-200 rounded-lg p-3 space-y-1">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-bold text-teal-900 flex items-center space-x-1">
-                  <Sparkles className="w-3.5 h-3.5 text-teal-600" />
                   <span>Recommended Block Window</span>
                 </span>
                 <span className="text-[10px] font-extrabold text-teal-800 bg-teal-100 px-1.5 py-0.2 rounded">

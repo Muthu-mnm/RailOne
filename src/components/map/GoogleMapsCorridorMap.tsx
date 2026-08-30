@@ -165,7 +165,7 @@ export const GoogleMapsCorridorMap: React.FC = () => {
   // Focus directly onto Vaigai Express
   const handleSpotlightVaigai = () => {
     setSelectedTrain(vaigaiTrain);
-    setCenterTarget([12.2312, 79.6548]); // Near Tindivanam / Villupuram approach
+    setCenterTarget([12.4500, 79.8000]); // Cruising near Madurantakam / Tindivanam
     setZoomTarget(10);
   };
 
@@ -208,15 +208,18 @@ export const GoogleMapsCorridorMap: React.FC = () => {
     const bgColor = isVaigai ? '#123B5D' : isPallavan ? '#DC2626' : isFreight ? '#334155' : '#2C5F7C';
     const borderColor = isVaigai ? '#0FAF9A' : '#FFFFFF';
 
+    const shortName = train.name.split(' ')[0];
+
     return L.divIcon({
       className: 'custom-train-marker',
       html: `
         <div style="
-          display: flex;
+          display: inline-flex;
           align-items: center;
+          width: max-content;
           background: ${bgColor};
           color: #FFFFFF;
-          padding: 4px 8px;
+          padding: 4px 12px;
           border-radius: 20px;
           border: 2px solid ${borderColor};
           box-shadow: 0 4px 14px rgba(0,0,0,0.35);
@@ -225,17 +228,16 @@ export const GoogleMapsCorridorMap: React.FC = () => {
           cursor: pointer;
           transform: translate(-50%, -50%);
         ">
-          <span style="margin-right: 5px; font-size: 13px;">🚆</span>
-          <span style="font-weight: 800; font-size: 11px; letter-spacing: -0.2px;">${train.number} ${train.name.split(' ')[0]}</span>
+          <span style="font-weight: 800; font-size: 11px; letter-spacing: -0.2px;">${train.number} ${shortName}</span>
           ${
             isVaigai
-              ? `<span style="margin-left: 5px; background: #0FAF9A; color: #0C2340; font-size: 9px; font-weight: 900; padding: 1px 5px; border-radius: 10px;">Protected ✓</span>`
+              ? `<span style="margin-left: 6px; background: #0FAF9A; color: #0C2340; font-size: 9px; font-weight: 900; padding: 1px 6px; border-radius: 10px;">Protected ✓</span>`
               : ''
           }
         </div>
       `,
-      iconSize: [140, 30],
-      iconAnchor: [70, 15],
+      iconSize: [0, 0],
+      iconAnchor: [0, 0],
     });
   };
 
@@ -246,36 +248,37 @@ export const GoogleMapsCorridorMap: React.FC = () => {
       className: 'custom-station-marker',
       html: `
         <div style="
-          display: flex;
+          display: inline-flex;
           align-items: center;
           gap: 4px;
           cursor: pointer;
-          transform: translate(-10px, -10px);
+          transform: translate(-7px, -7px);
         ">
           <div style="
-            width: ${isHub ? '16px' : '10px'};
-            height: ${isHub ? '16px' : '10px'};
-            background: ${isHub ? '#DC2626' : '#123B5D'};
-            border: 2px solid #FFFFFF;
+            width: ${isHub ? '14px' : '11px'};
+            height: ${isHub ? '14px' : '11px'};
+            background: ${isHub ? '#DC2626' : '#FFFFFF'};
+            border: ${isHub ? '2.5px solid #FFFFFF' : '2.5px solid #123B5D'};
             border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+            flex-shrink: 0;
           "></div>
           <span style="
-            background: rgba(255,255,255,0.92);
+            background: rgba(255,255,255,0.95);
             backdrop-filter: blur(4px);
             color: #0F172A;
             font-size: ${isHub ? '10px' : '9px'};
-            font-weight: ${isHub ? '800' : '600'};
-            padding: 1px 4px;
+            font-weight: ${isHub ? '800' : '700'};
+            padding: 1.5px 4px;
             border-radius: 4px;
             border: 1px solid #CBD5E1;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
             white-space: nowrap;
           ">${station.code}</span>
         </div>
       `,
-      iconSize: [60, 20],
-      iconAnchor: [8, 10],
+      iconSize: [0, 0],
+      iconAnchor: [0, 0],
     });
   };
 
@@ -475,7 +478,7 @@ export const GoogleMapsCorridorMap: React.FC = () => {
             >
               <Tooltip sticky>
                 <div className="text-xs p-1">
-                  <div className="font-bold text-teal-900">⚡ 3-in-1 Coordinated Block (Option B)</div>
+                  <div className="font-bold text-teal-900"> 3-in-1 Coordinated Block (Option B)</div>
                   <div className="text-slate-600">Villupuram–Vriddhachalam (KM 159–213)</div>
                   <div className="text-emerald-700 font-extrabold mt-0.5">12635 Vaigai Express 100% Protected ✓</div>
                 </div>
@@ -496,7 +499,7 @@ export const GoogleMapsCorridorMap: React.FC = () => {
             >
               <Tooltip sticky>
                 <div className="text-xs p-1">
-                  <div className="font-bold text-amber-900">⚠️ Temporary Speed Restriction (TSR 45 km/h)</div>
+                  <div className="font-bold text-amber-900"> Temporary Speed Restriction (TSR 45 km/h)</div>
                   <div className="text-slate-600">Ariyalur–Tiruchchirappalli (KM 267–336)</div>
                 </div>
               </Tooltip>
@@ -533,12 +536,12 @@ export const GoogleMapsCorridorMap: React.FC = () => {
               </Marker>
             ))}
 
-          {/* LIVE TRAINS ALONG THE TRACK (Realistic Geo Coordinates with Zero Overlapping) */}
+          {/* LIVE TRAINS ALONG THE TRACK (Distributed naturally across 500km corridor with ZERO Overlaps) */}
           {showTrains && (
             <>
-              {/* 1. 🚆 12635 VAIGAI SF EXP (Between Tindivanam & Villupuram) */}
+              {/* 1. 12635 VAIGAI SF EXP (Northern Section: Cruising near Madurantakam / Melmaruvathur) */}
               <Marker
-                position={[12.2312, 79.6548]}
+                position={[12.4500, 79.8000]}
                 icon={createTrainIcon(vaigaiTrain)}
                 eventHandlers={{
                   click: () => setSelectedTrain(vaigaiTrain),
@@ -568,9 +571,9 @@ export const GoogleMapsCorridorMap: React.FC = () => {
                 </Popup>
               </Marker>
 
-              {/* 2. 12606 Pallavan Superfast Express (Near Ulundurpet) */}
+              {/* 2. 12606 Pallavan Superfast Express (Central Section: South of Villupuram near Ulundurpet) */}
               <Marker
-                position={[11.7500, 79.4100]}
+                position={[11.7200, 79.4000]}
                 icon={createTrainIcon(trains[2])}
                 eventHandlers={{
                   click: () => setSelectedTrain(trains[2]),
@@ -584,25 +587,9 @@ export const GoogleMapsCorridorMap: React.FC = () => {
                 </Popup>
               </Marker>
 
-              {/* 3. 56706 Passenger (Near Pennadam / Ariyalur) */}
+              {/* 3. G-SR-742 Freight Rake (Central-South Siding: Pennadam Chord Line) */}
               <Marker
-                position={[11.3300, 79.2000]}
-                icon={createTrainIcon(trains[4])}
-                eventHandlers={{
-                  click: () => setSelectedTrain(trains[4]),
-                }}
-              >
-                <Popup>
-                  <div className="p-2 text-xs space-y-1">
-                    <div className="font-bold text-slate-800">56706 Villupuram–Madurai Passenger</div>
-                    <div className="text-slate-500">Speed: 60 km/h • Controlled Spacing</div>
-                  </div>
-                </Popup>
-              </Marker>
-
-              {/* 4. G-SR-742 Freight (In Siding at Villupuram) */}
-              <Marker
-                position={[11.9600, 79.5100]}
+                position={[11.3800, 79.2400]}
                 icon={createTrainIcon(trains[5])}
                 eventHandlers={{
                   click: () => setSelectedTrain(trains[5]),
@@ -612,6 +599,22 @@ export const GoogleMapsCorridorMap: React.FC = () => {
                   <div className="p-2 text-xs space-y-1">
                     <div className="font-bold text-slate-800">G-SR-742 Neyveli Coal Rake</div>
                     <div className="text-slate-500">Regulated in Loop Track 3 (+8m)</div>
+                  </div>
+                </Popup>
+              </Marker>
+
+              {/* 4. 56706 Passenger (Southern Section: Near Lalgudi / Srirangam approach) */}
+              <Marker
+                position={[10.9400, 78.8400]}
+                icon={createTrainIcon(trains[4])}
+                eventHandlers={{
+                  click: () => setSelectedTrain(trains[4]),
+                }}
+              >
+                <Popup>
+                  <div className="p-2 text-xs space-y-1">
+                    <div className="font-bold text-slate-800">56706 Villupuram–Madurai Passenger</div>
+                    <div className="text-slate-500">Speed: 60 km/h • Controlled Spacing</div>
                   </div>
                 </Popup>
               </Marker>
