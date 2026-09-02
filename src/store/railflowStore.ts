@@ -53,7 +53,7 @@ export interface OptimizationStage {
 
 export const OPTIMIZATION_STAGES: OptimizationStage[] = [
   { label: 'Loading maintenance requirements', description: 'Querying SMMS/TMS task backlog for section S-BHC-JJKR...' },
-  { label: 'Loading train timetable & FOIS movements', description: 'Integrating 126 daily train paths & dynamic freight forecasts...' },
+  { label: 'Loading scheduled train timetables', description: 'Integrating 126 daily scheduled passenger and express train paths...' },
   { label: 'Validating corridor topology & crossover interlocks', description: 'Checking 43.5km double-line track & siding infrastructure...' },
   { label: 'Checking crew & heavy machinery availability', description: 'Verifying CSM-09 Tamping Machine, TW-04 Tower Wagon & gangs...' },
   { label: 'Detecting multi-department compatibility', description: 'Aligning Civil (Tamping), S&T (Point 104A) and TRD (OHE Catenary)...' },

@@ -88,7 +88,7 @@ export const Operations: React.FC = () => {
         <KpiCard
           label="Critical Tasks"
           value="3"
-          sublabel="Overdue / Risk >70%"
+          sublabel="Overdue / Risk >30%"
           icon={<AlertTriangle className="w-4 h-4 text-rose-600" />}
           trend="up"
           trendValue="+1"

@@ -22,7 +22,7 @@ export const TrainImpactGantt: React.FC<TrainImpactGanttProps> = ({
   const vaigaiTrain = trains.find((t) => t.number === '12635') || trains[0];
   const pallavanTrain = trains.find((t) => t.number === '12606') || trains[2];
   const passengerTrain = trains.find((t) => t.number === '56706') || trains[4];
-  const freightTrain = trains.find((t) => t.number === 'G-SR-742') || trains[5];
+  const guruvayurTrain = trains.find((t) => t.number === '16127') || trains[3];
 
   // Time slots from 08:00 to 19:00 (11 hours total = 660 minutes)
   const hours = [
@@ -115,6 +115,40 @@ export const TrainImpactGantt: React.FC<TrainImpactGanttProps> = ({
       },
     },
     {
+      number: '16127',
+      title: '16127 Guruvayur Express',
+      subtitle: 'MS 09:45 → GUV 17:40 (VM 12:15)',
+      startTime: '12:15',
+      endTime: '13:05',
+      startStationLabel: 'VM 12:15',
+      endStationLabel: 'VRI 13:05',
+      indicatorColor: 'bg-indigo-600',
+      titleColor: 'text-indigo-900',
+      barClasses: 'bg-indigo-600 border border-indigo-400',
+      trainObj: guruvayurTrain,
+      renderStatusBadge: () => {
+        if (selectedCandidate.id === 'OPTION_B') {
+          return (
+            <span className="inline-flex items-center text-[10px] bg-teal-100 text-teal-900 border border-teal-300 font-bold px-2.5 py-1 rounded-md truncate max-w-[260px]">
+              Regulated +8m (Platform Spacing)
+            </span>
+          );
+        }
+        if (selectedCandidate.id === 'OPTION_C') {
+          return (
+            <span className="inline-flex items-center text-[10px] bg-rose-100 text-rose-900 border border-rose-300 font-bold px-2.5 py-1 rounded-md truncate max-w-[260px]">
+              Delayed +16m (Headway Cascade)
+            </span>
+          );
+        }
+        return (
+          <span className="inline-flex items-center text-[10px] text-slate-600 bg-slate-100 border border-slate-200 font-semibold px-2.5 py-1 rounded-md truncate max-w-[260px]">
+            ✓ Normal Timetable Path
+          </span>
+        );
+      },
+    },
+    {
       number: '56706',
       title: '56706 Villupuram–Madurai Passenger',
       subtitle: 'VM Dep 11:45 IST',
@@ -130,7 +164,7 @@ export const TrainImpactGantt: React.FC<TrainImpactGanttProps> = ({
         if (selectedCandidate.id === 'OPTION_B') {
           return (
             <span className="inline-flex items-center text-[10px] bg-teal-100 text-teal-900 border border-teal-300 font-bold px-2.5 py-1 rounded-md truncate max-w-[260px]">
-              Regulated +6m (Controlled Spacing)
+              Regulated +10m (Loop Clearance)
             </span>
           );
         }
@@ -144,33 +178,6 @@ export const TrainImpactGantt: React.FC<TrainImpactGanttProps> = ({
         return (
           <span className="inline-flex items-center text-[10px] text-slate-600 bg-slate-100 border border-slate-200 font-semibold px-2.5 py-1 rounded-md truncate max-w-[260px]">
             ✓ Normal Timetable Path
-          </span>
-        );
-      },
-    },
-    {
-      number: 'G-SR-742',
-      title: 'G-SR-742 Neyveli Coal Freight Rake',
-      subtitle: 'VM 12:50 IST',
-      startTime: '12:50',
-      endTime: '13:45',
-      startStationLabel: '12:50',
-      endStationLabel: '13:45',
-      indicatorColor: 'bg-slate-500',
-      titleColor: 'text-slate-700',
-      barClasses: 'bg-slate-600 border border-dashed border-white/90',
-      trainObj: freightTrain,
-      renderStatusBadge: () => {
-        if (selectedCandidate.id === 'OPTION_B') {
-          return (
-            <span className="inline-flex items-center text-[10px] bg-slate-100 text-slate-800 border border-slate-300 font-bold px-2.5 py-1 rounded-md truncate max-w-[260px]">
-              Siding Loop Track 3 Halt (+8m)
-            </span>
-          );
-        }
-        return (
-          <span className="inline-flex items-center text-[10px] text-slate-600 bg-slate-100 border border-slate-200 font-semibold px-2.5 py-1 rounded-md truncate max-w-[260px]">
-            Normal Path
           </span>
         );
       },

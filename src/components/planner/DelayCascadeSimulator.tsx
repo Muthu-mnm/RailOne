@@ -101,7 +101,7 @@ export const DelayCascadeSimulator: React.FC = () => {
                     ? '🚆 12635 Vaigai Superfast Express (Priority)'
                     : isOptionA
                     ? '🚆 12606 Pallavan Superfast Express (Priority)'
-                    : 'G-SR-742 Neyveli Lignite Freight Rake'}
+                    : '56706 Villupuram–Madurai Passenger'}
                 </span>
               </div>
               <span
@@ -109,7 +109,7 @@ export const DelayCascadeSimulator: React.FC = () => {
                   isOptionC || isOptionA ? 'bg-rose-600 text-white' : 'bg-slate-800 text-white'
                 }`}
               >
-                {isOptionC ? '+15 min Vaigai Delay' : isOptionA ? '+28 min Delay' : '+8 min Loop Regulation'}
+                {isOptionC ? '+15 min Vaigai Delay' : isOptionA ? '+28 min Delay' : '+10 min Loop Regulation'}
               </span>
             </div>
             <p className="text-[11px] text-slate-600 mt-1">
@@ -117,7 +117,7 @@ export const DelayCascadeSimulator: React.FC = () => {
                 ? 'Held at Villupuram Outer Signal due to active possession on UP mainline.'
                 : isOptionA
                 ? 'Regulated at Vriddhachalam approach signal.'
-                : 'Regulated into Villupuram Siding Loop Track 3 to keep UP chord mainline clear.'}
+                : 'Regulated into Villupuram Loop Line 2 to keep UP chord mainline clear for block execution.'}
             </p>
           </div>
         </div>
@@ -152,17 +152,17 @@ export const DelayCascadeSimulator: React.FC = () => {
                     ? '16127 Guruvayur Express'
                     : isOptionA
                     ? '12636 Vaigai SF Express (Up Return)'
-                    : '56706 Villupuram–Madurai Passenger'}
+                    : '16127 Guruvayur Express'}
                 </span>
               </div>
               <span className="font-mono font-bold text-xs bg-railway-blue text-white px-2 py-0.5 rounded">
-                {isOptionC ? '+16 min Delay' : isOptionA ? '+22 min Delay' : '+6 min Controlled Spacing'}
+                {isOptionC ? '+16 min Delay' : isOptionA ? '+22 min Delay' : '+8 min Platform Hold'}
               </span>
             </div>
             <p className="text-[11px] text-slate-600 mt-1">
               {isOptionC
                 ? 'Propagated double yellow signal aspects across 3 blocks behind delayed Vaigai Express.'
-                : 'Maintains required 3km safety distance behind regulated freight departure from Villupuram.'}
+                : 'Maintains required 3km safety headway behind passenger train departure from Villupuram.'}
             </p>
           </div>
         </div>
@@ -183,15 +183,19 @@ export const DelayCascadeSimulator: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-railway-steel" />
                 <span className="font-extrabold text-xs">
-                  {isOptionC ? 'G-SR-742 Neyveli Freight' : isOptionA ? '56706 Passenger' : '16127 Guruvayur Express'}
+                  {isOptionC ? '56706 Passenger' : isOptionA ? '56706 Passenger' : '12635 Vaigai Express (Protected)'}
                 </span>
               </div>
-              <span className="font-mono font-bold text-xs bg-railway-steel text-white px-2 py-0.5 rounded">
-                {isOptionC ? '+9 min Delay' : isOptionA ? '+14 min Delay' : '+4 min Siding Hold'}
+              <span className="font-mono font-bold text-xs bg-emerald-600 text-white px-2 py-0.5 rounded">
+                {isOptionC ? '+9 min Delay' : isOptionA ? '+14 min Delay' : '0 min (100% On Time)'}
               </span>
             </div>
             <p className="text-[11px] text-slate-600 mt-1">
-              Delayed departure from Villupuram Platform 2 to avoid single-line headway congestion.
+              {isOptionC
+                ? 'Held at approach to allow priority recovery.'
+                : isOptionA
+                ? 'Delayed departure from Villupuram to avoid congestion.'
+                : 'Departs Chennai at 13:15, arrives at Villupuram at 15:30 with full green signal aspect.'}
             </p>
           </div>
         </div>
@@ -204,7 +208,7 @@ export const DelayCascadeSimulator: React.FC = () => {
           <span className="font-semibold">
             {isOptionC
               ? 'Option C creates an unacceptable +15m delay to 12635 Vaigai Superfast Express, violating priority constraints.'
-              : 'Option B achieves 100% Vaigai Express protection: 18 min total delay absorbed entirely by freight and passenger trains without express disruption.'}
+              : 'Option B achieves 100% Vaigai Express protection: 18 min total delay absorbed entirely by ordinary passenger and regional scheduled trains without express disruption.'}
           </span>
         </div>
       </div>

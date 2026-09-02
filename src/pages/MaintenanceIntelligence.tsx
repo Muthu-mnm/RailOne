@@ -235,9 +235,9 @@ export const MaintenanceIntelligence: React.FC = () => {
                         <div className="flex items-center space-x-1.5">
                           <span
                             className={`font-bold ${
-                              t.failureRiskScore >= 80
+                              t.failureRiskScore >= 35
                                 ? 'text-rose-600'
-                                : t.failureRiskScore >= 60
+                                : t.failureRiskScore >= 25
                                 ? 'text-amber-600'
                                 : 'text-emerald-600'
                             }`}

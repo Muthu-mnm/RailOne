@@ -203,9 +203,8 @@ export const GoogleMapsCorridorMap: React.FC = () => {
   const createTrainIcon = (train: Train) => {
     const isVaigai = train.number === '12635';
     const isPallavan = train.number === '12606';
-    const isFreight = train.type.includes('Freight');
 
-    const bgColor = isVaigai ? '#123B5D' : isPallavan ? '#DC2626' : isFreight ? '#334155' : '#2C5F7C';
+    const bgColor = isVaigai ? '#123B5D' : isPallavan ? '#DC2626' : '#2C5F7C';
     const borderColor = isVaigai ? '#0FAF9A' : '#FFFFFF';
 
     const shortName = train.name.split(' ')[0];
@@ -587,21 +586,23 @@ export const GoogleMapsCorridorMap: React.FC = () => {
                 </Popup>
               </Marker>
 
-              {/* 3. G-SR-742 Freight Rake (Central-South Siding: Pennadam Chord Line) */}
-              <Marker
-                position={[11.3800, 79.2400]}
-                icon={createTrainIcon(trains[5])}
-                eventHandlers={{
-                  click: () => setSelectedTrain(trains[5]),
-                }}
-              >
-                <Popup>
-                  <div className="p-2 text-xs space-y-1">
-                    <div className="font-bold text-slate-800">G-SR-742 Neyveli Coal Rake</div>
-                    <div className="text-slate-500">Regulated in Loop Track 3 (+8m)</div>
-                  </div>
-                </Popup>
-              </Marker>
+              {/* 3. 16127 Guruvayur Express (Central-South Section: South of Villupuram) */}
+              {trains[3] && (
+                <Marker
+                  position={[11.3800, 79.2400]}
+                  icon={createTrainIcon(trains[3])}
+                  eventHandlers={{
+                    click: () => setSelectedTrain(trains[3]),
+                  }}
+                >
+                  <Popup>
+                    <div className="p-2 text-xs space-y-1">
+                      <div className="font-bold text-slate-800">16127 Guruvayur Express</div>
+                      <div className="text-slate-500">Chennai → Guruvayur (On Time)</div>
+                    </div>
+                  </Popup>
+                </Marker>
+              )}
 
               {/* 4. 56706 Passenger (Southern Section: Near Lalgudi / Srirangam approach) */}
               <Marker

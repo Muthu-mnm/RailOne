@@ -107,7 +107,7 @@ export interface TimetableStop {
 export interface Train {
   number: string;
   name: string;
-  type: 'Superfast / Intercity' | 'Superfast Express' | 'Mail/Express' | 'Passenger/MEMU' | 'Freight Coal Rake';
+  type: 'Superfast / Intercity' | 'Superfast Express' | 'Mail/Express' | 'Passenger/MEMU';
   isPriority: boolean;
   fromStation: string;
   toStation: string;

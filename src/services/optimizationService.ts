@@ -71,7 +71,7 @@ export function simulateWhatIfScenario(
     priorityConflicts = 0;
     trainsAffected = Math.round(3 * params.trafficMultiplier);
   }
-  // Afternoon window (14:00 - 17:30): Coromandel Express, moderate freight
+  // Afternoon window (14:00 - 17:30): Coromandel Express, passenger services
   else if (startDecimal > 13.5 && startDecimal < 17.5) {
     baseDelay = Math.round(38 * params.trafficMultiplier);
     priorityConflicts = 1;
@@ -85,7 +85,7 @@ export function simulateWhatIfScenario(
     trainsAffected = 6;
     isTSRNeeded = true;
   }
-  // Night window (00:30 - 04:30): Lowest traffic, freight only
+  // Night window (00:30 - 04:30): Lowest scheduled passenger traffic
   else {
     baseDelay = Math.round(8 * params.trafficMultiplier);
     priorityConflicts = 0;
@@ -141,7 +141,7 @@ export function simulateWhatIfScenario(
         ? [{ number: '12801', name: 'Purushottam SF Exp', isPriority: true, estimatedDelay: 22, scheduledTime: 'Approach' }]
         : []),
       { number: '58412', name: 'Bhadrak-Cuttack Pass', isPriority: false, estimatedDelay: Math.round(baseDelay * 0.4), scheduledTime: 'Loop' },
-      { number: 'G-SER-892', name: 'Coal Freight Rake', isPriority: false, estimatedDelay: Math.round(baseDelay * 0.6), scheduledTime: 'Siding' },
+      { number: '18410', name: 'Sri Jagannath Express', isPriority: false, estimatedDelay: Math.round(baseDelay * 0.6), scheduledTime: 'Platform' },
     ],
   };
 

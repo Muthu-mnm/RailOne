@@ -33,7 +33,7 @@ export const DEMO_STEPS: DemoStepInfo[] = [
     badge: 'Problem Definition',
     narrative:
       'Civil Engineering requests track tamping (MT-ENG-041), S&T requests point machine overhaul (MT-SNT-018), and Traction/OHE requests catenary inspection (MT-TRD-007) on the Southern Railway Chord Line.',
-    actionHint: 'Notice high failure risk scores (91% for overdue S&T point machine).',
+    actionHint: 'Notice elevated failure risk scores (38% for overdue S&T point machine).',
     icon: <Sparkles className="w-5 h-5 text-amber-500" />,
   },
   {
@@ -59,7 +59,7 @@ export const DEMO_STEPS: DemoStepInfo[] = [
     title: '4. 12635 Vaigai Superfast Express & Traffic Integrated',
     badge: 'Traffic Integration',
     narrative:
-      'Corridor traffic is evaluated: 12635 Vaigai SF Express (MS 13:15 → MDU 20:35), 12606 Pallavan Express, 56706 Passenger, and Neyveli Lignite Freight.',
+      'Corridor traffic is evaluated: 12635 Vaigai SF Express (MS 13:15 → MDU 20:35), 12606 Pallavan Express, 16127 Guruvayur Express, and 56706 Passenger.',
     actionHint: '12635 Vaigai Express is tagged with HIGH Priority constraint in CP-SAT solver.',
     icon: <Train className="w-5 h-5 text-indigo-500" />,
   },
