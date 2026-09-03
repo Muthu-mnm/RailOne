@@ -28,8 +28,11 @@ export const Operations: React.FC = () => {
     startOptimization,
   } = useRailFlowStore();
 
-  const currentSection = sections.find((s) => s.id === selectedSectionId) || sections[2];
-  const pendingSectionTasks = tasks.filter((t) => t.sectionId === selectedSectionId);
+  const currentSection = sections.find((s) => s.id === selectedSectionId) || sections[0];
+  const pendingSectionTasks = tasks.filter((t) => t.sectionId === currentSection.id);
+  const criticalSectionTasksCount = pendingSectionTasks.filter(
+    (t) => t.criticality === 'CRITICAL' || t.urgency === 'Immediate' || t.failureRiskScore >= 30
+  ).length;
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
@@ -172,12 +175,14 @@ export const Operations: React.FC = () => {
 
               <span
                 className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                  currentSection.id === 'S-BHC-JJKR'
+                  criticalSectionTasksCount > 0
+                    ? 'bg-rose-100 text-rose-800 border border-rose-300'
+                    : pendingSectionTasks.length > 0
                     ? 'bg-amber-100 text-amber-800 border border-amber-300'
                     : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
                 }`}
               >
-                {currentSection.currentStatus}
+                {criticalSectionTasksCount > 0 ? 'Maintenance Scheduled' : currentSection.currentStatus}
               </span>
             </div>
 
@@ -192,31 +197,61 @@ export const Operations: React.FC = () => {
               <div className="p-2 bg-slate-50 rounded-lg border border-slate-100">
                 <span className="text-[10px] text-slate-500">Pending Tasks</span>
                 <div className="font-extrabold text-amber-700 mt-0.5">
-                  {currentSection.pendingTasksCount}
+                  {pendingSectionTasks.length}
                 </div>
               </div>
               <div className="p-2 bg-slate-50 rounded-lg border border-slate-100">
                 <span className="text-[10px] text-slate-500">Critical Risks</span>
                 <div className="font-extrabold text-rose-600 mt-0.5">
-                  {currentSection.criticalTasksCount}
+                  {criticalSectionTasksCount}
                 </div>
               </div>
             </div>
 
             {/* AI Recommendation Peek */}
-            <div className="bg-teal-50/70 border border-teal-200 rounded-lg p-3 space-y-1">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-teal-900 flex items-center space-x-1">
-                  <span>Recommended Block Window</span>
-                </span>
-                <span className="text-[10px] font-extrabold text-teal-800 bg-teal-100 px-1.5 py-0.2 rounded">
-                  Option B (11:30–14:00)
-                </span>
+            {currentSection.id === 'S-VM-VRI' ? (
+              <div className="bg-teal-50/70 border border-teal-200 rounded-lg p-3 space-y-1">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-teal-900 flex items-center space-x-1">
+                    <span>Recommended Block Window</span>
+                  </span>
+                  <span className="text-[10px] font-extrabold text-teal-800 bg-teal-100 px-1.5 py-0.2 rounded">
+                    Option B (11:30–14:00)
+                  </span>
+                </div>
+                <p className="text-[11px] text-teal-950">
+                  Consolidates 3 departmental tasks into 1 synchronized window, producing lowest train delay (18 min).
+                </p>
               </div>
-              <p className="text-[11px] text-teal-950">
-                Consolidates 3 departmental tasks into 1 synchronized window, producing lowest train delay (18 min).
-              </p>
-            </div>
+            ) : pendingSectionTasks.length > 0 ? (
+              <div className="bg-teal-50/60 border border-teal-200 rounded-lg p-3 space-y-1">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-teal-900 flex items-center space-x-1">
+                    <span>Recommended Maintenance Window</span>
+                  </span>
+                  <span className="text-[10px] font-extrabold text-teal-800 bg-teal-100 px-1.5 py-0.2 rounded">
+                    Off-Peak Slot
+                  </span>
+                </div>
+                <p className="text-[11px] text-teal-950">
+                  {pendingSectionTasks.length} task{pendingSectionTasks.length > 1 ? 's' : ''} queued ({pendingSectionTasks.map((t) => t.id).join(', ')}). Solver recommends non-peak window clearance.
+                </p>
+              </div>
+            ) : (
+              <div className="bg-emerald-50/60 border border-emerald-200 rounded-lg p-3 space-y-1">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-emerald-900">
+                    Corridor Asset Health
+                  </span>
+                  <span className="text-[10px] font-extrabold text-emerald-800 bg-emerald-100 px-1.5 py-0.2 rounded">
+                    Optimal
+                  </span>
+                </div>
+                <p className="text-[11px] text-emerald-950">
+                  All track, signal, and OHE assets operating nominally. Zero pending work blocks required.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Pending Departmental Maintenance Tasks on this Section */}
@@ -235,29 +270,45 @@ export const Operations: React.FC = () => {
               </div>
 
               <div className="space-y-2 mt-2 max-h-52 overflow-y-auto pr-1">
-                {pendingSectionTasks.map((t) => (
-                  <div
-                    key={t.id}
-                    className="p-2.5 rounded-lg border border-slate-200 bg-slate-50/60 hover:bg-slate-100/80 transition text-xs space-y-1"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-1.5">
-                        <span className="font-mono font-bold text-slate-900">{t.id}</span>
-                        <span className="text-[10px] font-semibold px-1.5 rounded bg-slate-200 text-slate-800">
-                          {t.department}
+                {pendingSectionTasks.length === 0 ? (
+                  <div className="text-center py-6 space-y-1">
+                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
+                    <p className="text-xs font-semibold text-slate-700">No Pending Activities</p>
+                    <p className="text-[10px] text-slate-400">
+                      All assets on {currentSection.name} are operating nominally with zero pending work orders.
+                    </p>
+                  </div>
+                ) : (
+                  pendingSectionTasks.map((t) => (
+                    <div
+                      key={t.id}
+                      className="p-2.5 rounded-lg border border-slate-200 bg-slate-50/60 hover:bg-slate-100/80 transition text-xs space-y-1"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-1.5">
+                          <span className="font-mono font-bold text-slate-900">{t.id}</span>
+                          <span className="text-[10px] font-semibold px-1.5 rounded bg-slate-200 text-slate-800">
+                            {t.department}
+                          </span>
+                        </div>
+                        <span
+                          className={`font-bold text-[11px] ${
+                            t.failureRiskScore >= 30 ? 'text-rose-600' : 'text-slate-600'
+                          }`}
+                        >
+                          Risk {t.failureRiskScore}%
                         </span>
                       </div>
-                      <span className="font-bold text-rose-600 text-[11px]">
-                        Risk {t.failureRiskScore}%
-                      </span>
+                      <div className="font-medium text-slate-800">{t.workType}</div>
+                      <div className="text-[10px] text-slate-500 flex items-center justify-between">
+                        <span>{t.durationHours}h req. • {t.requiredTeam.split('(')[0]}</span>
+                        <span className="text-teal-700 font-bold">
+                          {t.compatibleTasks.length > 0 ? 'Compatible 3-in-1' : 'Isolated Slot'}
+                        </span>
+                      </div>
                     </div>
-                    <div className="font-medium text-slate-800">{t.workType}</div>
-                    <div className="text-[10px] text-slate-500 flex items-center justify-between">
-                      <span>{t.durationHours}h req. • {t.requiredTeam.split('(')[0]}</span>
-                      <span className="text-teal-700 font-bold">Compatible 3-in-1</span>
-                    </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
 
@@ -267,10 +318,10 @@ export const Operations: React.FC = () => {
                 setActiveView('planner');
                 startOptimization();
               }}
-              className="w-full py-2 rounded-lg bg-railway-blue hover:bg-railway-dark text-white text-xs font-bold shadow-sm transition flex items-center justify-center space-x-1.5"
+              className="w-full py-2 bg-railway-lightBlue hover:bg-blue-100 text-railway-blue border border-railway-blue/20 rounded-lg text-xs font-bold transition flex items-center justify-center space-x-1.5"
             >
-              <span>Schedule 3 Tasks into 1 Block</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <Sparkles className="w-3.5 h-3.5 text-railway-teal" />
+              <span>Simulate Section Consolidation</span>
             </button>
           </div>
         </div>

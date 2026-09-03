@@ -8,11 +8,10 @@ import {
   FileText,
   ShieldCheck,
   Settings,
-  GitMerge,
-  Award,
-  Sparkles,
-  Zap,
   BarChart3,
+  History,
+  Zap,
+  GitMerge,
 } from 'lucide-react';
 import { ActiveView, useRailFlowStore } from '../../store/railflowStore';
 
@@ -81,8 +80,8 @@ export const Sidebar: React.FC = () => {
     },
     {
       id: 'hero-before-after',
-      label: 'Before vs RailFlow',
-      icon: <Award className="w-4 h-4" />
+      label: 'Decision Audit History',
+      icon: <History className="w-4 h-4" />
     },
     {
       id: 'analytics',

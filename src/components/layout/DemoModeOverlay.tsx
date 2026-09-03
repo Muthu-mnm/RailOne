@@ -111,10 +111,10 @@ export const DEMO_STEPS: DemoStepInfo[] = [
   {
     step: 9,
     title: '10. Human-in-the-Loop Controller Advisory Approval',
-    badge: 'Hero Comparison',
+    badge: 'Advisory Audit',
     narrative:
       'The Chief Controller confirms advisory approval. 3 separate closures collapse into 1 block, saving 46 minutes of passenger delay.',
-    actionHint: 'Review the SIH Before vs RailFlow comparison metrics.',
+    actionHint: 'Review the Controller Advisory Decision Audit History ledger.',
     icon: <Award className="w-5 h-5 text-purple-600" />,
   },
   {

@@ -155,7 +155,7 @@ export const BlockPlanner: React.FC = () => {
             onClick={() => setActiveView('hero-before-after')}
             className="px-4 py-2 rounded-lg text-xs font-semibold border border-slate-300 text-slate-700 hover:bg-slate-50 transition"
           >
-            Compare Before vs RailFlow
+            View Decision Audit History
           </button>
           <button
             onClick={() => handleApprove(activeCandidate)}
